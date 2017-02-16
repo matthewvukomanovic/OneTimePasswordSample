@@ -15,8 +15,8 @@ namespace OneTimePasswordSample.Test {
             var o1 = new OneTimePassword();
             var o2 = new OneTimePassword();
 
-            Assert.AreEqual(20, o1.GetSecret().Length);
-            Assert.AreNotEqual(BitConverter.ToString(o1.GetSecret()), BitConverter.ToString(o2.GetSecret()));
+            Assert.AreEqual(20, o1.SecretKey.GetSecret().Length);
+            Assert.AreNotEqual(BitConverter.ToString(o1.SecretKey.GetSecret()), BitConverter.ToString(o2.SecretKey.GetSecret()));
         }
 
         [TestMethod]
@@ -28,7 +28,7 @@ namespace OneTimePasswordSample.Test {
         [TestMethod]
         public void OneTimePassword_New_3() {
             var o = new OneTimePassword("MZx w6\tyT   bo I=");
-            Assert.AreEqual("mzxw6ytboi", o.GetBase32Secret(SecretFormatFlags.None));
+            Assert.AreEqual("mzxw6ytboi", o.SecretKey.GetBase32Secret(SecretFormatFlags.None));
         }
 
         [TestMethod]
@@ -46,220 +46,220 @@ namespace OneTimePasswordSample.Test {
         public void OneTimePassword_Secret_Base32_0() {
             var o = new OneTimePassword("");
 
-            Assert.AreEqual("", BitConverter.ToString(o.GetSecret()));
-            Assert.AreEqual("", o.GetBase32Secret());
-            Assert.AreEqual("", o.GetBase32Secret(SecretFormatFlags.None));
-            Assert.AreEqual("", o.GetBase32Secret(SecretFormatFlags.Spacing));
-            Assert.AreEqual("", o.GetBase32Secret(SecretFormatFlags.Padding));
-            Assert.AreEqual("", o.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
+            Assert.AreEqual("", BitConverter.ToString(o.SecretKey.GetSecret()));
+            Assert.AreEqual("", o.SecretKey.GetBase32Secret());
+            Assert.AreEqual("", o.SecretKey.GetBase32Secret(SecretFormatFlags.None));
+            Assert.AreEqual("", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing));
+            Assert.AreEqual("", o.SecretKey.GetBase32Secret(SecretFormatFlags.Padding));
+            Assert.AreEqual("", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
         }
 
         [TestMethod]
         public void OneTimePassword_Secret_Base32_1() {
             var o = new OneTimePassword("m");
 
-            Assert.AreEqual("60", BitConverter.ToString(o.GetSecret()));
-            Assert.AreEqual("ma", o.GetBase32Secret());
-            Assert.AreEqual("ma", o.GetBase32Secret(SecretFormatFlags.None));
-            Assert.AreEqual("ma", o.GetBase32Secret(SecretFormatFlags.Spacing));
-            Assert.AreEqual("ma======", o.GetBase32Secret(SecretFormatFlags.Padding));
-            Assert.AreEqual("ma== ====", o.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
+            Assert.AreEqual("60", BitConverter.ToString(o.SecretKey.GetSecret()));
+            Assert.AreEqual("ma", o.SecretKey.GetBase32Secret());
+            Assert.AreEqual("ma", o.SecretKey.GetBase32Secret(SecretFormatFlags.None));
+            Assert.AreEqual("ma", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing));
+            Assert.AreEqual("ma======", o.SecretKey.GetBase32Secret(SecretFormatFlags.Padding));
+            Assert.AreEqual("ma== ====", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
         }
 
         [TestMethod]
         public void OneTimePassword_Secret_Base32_2() {
             var o = new OneTimePassword("my");
 
-            Assert.AreEqual("66", BitConverter.ToString(o.GetSecret()));
-            Assert.AreEqual("my", o.GetBase32Secret());
-            Assert.AreEqual("my", o.GetBase32Secret(SecretFormatFlags.None));
-            Assert.AreEqual("my", o.GetBase32Secret(SecretFormatFlags.Spacing));
-            Assert.AreEqual("my======", o.GetBase32Secret(SecretFormatFlags.Padding));
-            Assert.AreEqual("my== ====", o.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
+            Assert.AreEqual("66", BitConverter.ToString(o.SecretKey.GetSecret()));
+            Assert.AreEqual("my", o.SecretKey.GetBase32Secret());
+            Assert.AreEqual("my", o.SecretKey.GetBase32Secret(SecretFormatFlags.None));
+            Assert.AreEqual("my", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing));
+            Assert.AreEqual("my======", o.SecretKey.GetBase32Secret(SecretFormatFlags.Padding));
+            Assert.AreEqual("my== ====", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
         }
 
         [TestMethod]
         public void OneTimePassword_Secret_Base32_2p() {
             var o = new OneTimePassword("MY======");
 
-            Assert.AreEqual("66", BitConverter.ToString(o.GetSecret()));
-            Assert.AreEqual("my", o.GetBase32Secret());
-            Assert.AreEqual("my", o.GetBase32Secret(SecretFormatFlags.None));
-            Assert.AreEqual("my", o.GetBase32Secret(SecretFormatFlags.Spacing));
-            Assert.AreEqual("my======", o.GetBase32Secret(SecretFormatFlags.Padding));
-            Assert.AreEqual("my== ====", o.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
+            Assert.AreEqual("66", BitConverter.ToString(o.SecretKey.GetSecret()));
+            Assert.AreEqual("my", o.SecretKey.GetBase32Secret());
+            Assert.AreEqual("my", o.SecretKey.GetBase32Secret(SecretFormatFlags.None));
+            Assert.AreEqual("my", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing));
+            Assert.AreEqual("my======", o.SecretKey.GetBase32Secret(SecretFormatFlags.Padding));
+            Assert.AreEqual("my== ====", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
         }
 
         [TestMethod]
         public void OneTimePassword_Secret_Base32_3() {
             var o = new OneTimePassword("mzx");
 
-            Assert.AreEqual("66-6E", BitConverter.ToString(o.GetSecret()));
-            Assert.AreEqual("mzxa", o.GetBase32Secret());
-            Assert.AreEqual("mzxa", o.GetBase32Secret(SecretFormatFlags.None));
-            Assert.AreEqual("mzxa", o.GetBase32Secret(SecretFormatFlags.Spacing));
-            Assert.AreEqual("mzxa====", o.GetBase32Secret(SecretFormatFlags.Padding));
-            Assert.AreEqual("mzxa ====", o.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
+            Assert.AreEqual("66-6E", BitConverter.ToString(o.SecretKey.GetSecret()));
+            Assert.AreEqual("mzxa", o.SecretKey.GetBase32Secret());
+            Assert.AreEqual("mzxa", o.SecretKey.GetBase32Secret(SecretFormatFlags.None));
+            Assert.AreEqual("mzxa", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing));
+            Assert.AreEqual("mzxa====", o.SecretKey.GetBase32Secret(SecretFormatFlags.Padding));
+            Assert.AreEqual("mzxa ====", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
         }
 
         [TestMethod]
         public void OneTimePassword_Secret_Base32_4() {
             var o = new OneTimePassword("mzxq");
 
-            Assert.AreEqual("66-6F", BitConverter.ToString(o.GetSecret()));
-            Assert.AreEqual("mzxq", o.GetBase32Secret());
-            Assert.AreEqual("mzxq", o.GetBase32Secret(SecretFormatFlags.None));
-            Assert.AreEqual("mzxq", o.GetBase32Secret(SecretFormatFlags.Spacing));
-            Assert.AreEqual("mzxq====", o.GetBase32Secret(SecretFormatFlags.Padding));
-            Assert.AreEqual("mzxq ====", o.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
+            Assert.AreEqual("66-6F", BitConverter.ToString(o.SecretKey.GetSecret()));
+            Assert.AreEqual("mzxq", o.SecretKey.GetBase32Secret());
+            Assert.AreEqual("mzxq", o.SecretKey.GetBase32Secret(SecretFormatFlags.None));
+            Assert.AreEqual("mzxq", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing));
+            Assert.AreEqual("mzxq====", o.SecretKey.GetBase32Secret(SecretFormatFlags.Padding));
+            Assert.AreEqual("mzxq ====", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
         }
 
         [TestMethod]
         public void OneTimePassword_Secret_Base32_4p() {
             var o = new OneTimePassword("MZXQ====");
 
-            Assert.AreEqual("66-6F", BitConverter.ToString(o.GetSecret()));
-            Assert.AreEqual("mzxq", o.GetBase32Secret());
-            Assert.AreEqual("mzxq", o.GetBase32Secret(SecretFormatFlags.None));
-            Assert.AreEqual("mzxq", o.GetBase32Secret(SecretFormatFlags.Spacing));
-            Assert.AreEqual("mzxq====", o.GetBase32Secret(SecretFormatFlags.Padding));
-            Assert.AreEqual("mzxq ====", o.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
+            Assert.AreEqual("66-6F", BitConverter.ToString(o.SecretKey.GetSecret()));
+            Assert.AreEqual("mzxq", o.SecretKey.GetBase32Secret());
+            Assert.AreEqual("mzxq", o.SecretKey.GetBase32Secret(SecretFormatFlags.None));
+            Assert.AreEqual("mzxq", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing));
+            Assert.AreEqual("mzxq====", o.SecretKey.GetBase32Secret(SecretFormatFlags.Padding));
+            Assert.AreEqual("mzxq ====", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
         }
 
         [TestMethod]
         public void OneTimePassword_Secret_Base32_5() {
             var o = new OneTimePassword("mzxw6");
 
-            Assert.AreEqual("66-6F-6F", BitConverter.ToString(o.GetSecret()));
-            Assert.AreEqual("mzxw 6", o.GetBase32Secret());
-            Assert.AreEqual("mzxw6", o.GetBase32Secret(SecretFormatFlags.None));
-            Assert.AreEqual("mzxw 6", o.GetBase32Secret(SecretFormatFlags.Spacing));
-            Assert.AreEqual("mzxw6===", o.GetBase32Secret(SecretFormatFlags.Padding));
-            Assert.AreEqual("mzxw 6===", o.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
+            Assert.AreEqual("66-6F-6F", BitConverter.ToString(o.SecretKey.GetSecret()));
+            Assert.AreEqual("mzxw 6", o.SecretKey.GetBase32Secret());
+            Assert.AreEqual("mzxw6", o.SecretKey.GetBase32Secret(SecretFormatFlags.None));
+            Assert.AreEqual("mzxw 6", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing));
+            Assert.AreEqual("mzxw6===", o.SecretKey.GetBase32Secret(SecretFormatFlags.Padding));
+            Assert.AreEqual("mzxw 6===", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
         }
 
         [TestMethod]
         public void OneTimePassword_Secret_Base32_5p() {
             var o = new OneTimePassword("MZXW6===");
 
-            Assert.AreEqual("66-6F-6F", BitConverter.ToString(o.GetSecret()));
-            Assert.AreEqual("mzxw 6", o.GetBase32Secret());
-            Assert.AreEqual("mzxw6", o.GetBase32Secret(SecretFormatFlags.None));
-            Assert.AreEqual("mzxw 6", o.GetBase32Secret(SecretFormatFlags.Spacing));
-            Assert.AreEqual("mzxw6===", o.GetBase32Secret(SecretFormatFlags.Padding));
-            Assert.AreEqual("mzxw 6===", o.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
+            Assert.AreEqual("66-6F-6F", BitConverter.ToString(o.SecretKey.GetSecret()));
+            Assert.AreEqual("mzxw 6", o.SecretKey.GetBase32Secret());
+            Assert.AreEqual("mzxw6", o.SecretKey.GetBase32Secret(SecretFormatFlags.None));
+            Assert.AreEqual("mzxw 6", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing));
+            Assert.AreEqual("mzxw6===", o.SecretKey.GetBase32Secret(SecretFormatFlags.Padding));
+            Assert.AreEqual("mzxw 6===", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
         }
 
         [TestMethod]
         public void OneTimePassword_Secret_Base32_6() {
             var o = new OneTimePassword("mzxw6y");
 
-            Assert.AreEqual("66-6F-6F-60", BitConverter.ToString(o.GetSecret()));
-            Assert.AreEqual("mzxw 6ya", o.GetBase32Secret());
-            Assert.AreEqual("mzxw6ya", o.GetBase32Secret(SecretFormatFlags.None));
-            Assert.AreEqual("mzxw 6ya", o.GetBase32Secret(SecretFormatFlags.Spacing));
-            Assert.AreEqual("mzxw6ya=", o.GetBase32Secret(SecretFormatFlags.Padding));
-            Assert.AreEqual("mzxw 6ya=", o.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
+            Assert.AreEqual("66-6F-6F-60", BitConverter.ToString(o.SecretKey.GetSecret()));
+            Assert.AreEqual("mzxw 6ya", o.SecretKey.GetBase32Secret());
+            Assert.AreEqual("mzxw6ya", o.SecretKey.GetBase32Secret(SecretFormatFlags.None));
+            Assert.AreEqual("mzxw 6ya", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing));
+            Assert.AreEqual("mzxw6ya=", o.SecretKey.GetBase32Secret(SecretFormatFlags.Padding));
+            Assert.AreEqual("mzxw 6ya=", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
         }
 
         [TestMethod]
         public void OneTimePassword_Secret_Base32_7() {
             var o = new OneTimePassword("mzxw6yq");
 
-            Assert.AreEqual("66-6F-6F-62", BitConverter.ToString(o.GetSecret()));
-            Assert.AreEqual("mzxw 6yq", o.GetBase32Secret());
-            Assert.AreEqual("mzxw6yq", o.GetBase32Secret(SecretFormatFlags.None));
-            Assert.AreEqual("mzxw 6yq", o.GetBase32Secret(SecretFormatFlags.Spacing));
-            Assert.AreEqual("mzxw6yq=", o.GetBase32Secret(SecretFormatFlags.Padding));
-            Assert.AreEqual("mzxw 6yq=", o.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
+            Assert.AreEqual("66-6F-6F-62", BitConverter.ToString(o.SecretKey.GetSecret()));
+            Assert.AreEqual("mzxw 6yq", o.SecretKey.GetBase32Secret());
+            Assert.AreEqual("mzxw6yq", o.SecretKey.GetBase32Secret(SecretFormatFlags.None));
+            Assert.AreEqual("mzxw 6yq", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing));
+            Assert.AreEqual("mzxw6yq=", o.SecretKey.GetBase32Secret(SecretFormatFlags.Padding));
+            Assert.AreEqual("mzxw 6yq=", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
         }
 
         [TestMethod]
         public void OneTimePassword_Secret_Base32_7p() {
             var o = new OneTimePassword("MZXW6YQ=");
 
-            Assert.AreEqual("66-6F-6F-62", BitConverter.ToString(o.GetSecret()));
-            Assert.AreEqual("mzxw 6yq", o.GetBase32Secret());
-            Assert.AreEqual("mzxw6yq", o.GetBase32Secret(SecretFormatFlags.None));
-            Assert.AreEqual("mzxw 6yq", o.GetBase32Secret(SecretFormatFlags.Spacing));
-            Assert.AreEqual("mzxw6yq=", o.GetBase32Secret(SecretFormatFlags.Padding));
-            Assert.AreEqual("mzxw 6yq=", o.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
+            Assert.AreEqual("66-6F-6F-62", BitConverter.ToString(o.SecretKey.GetSecret()));
+            Assert.AreEqual("mzxw 6yq", o.SecretKey.GetBase32Secret());
+            Assert.AreEqual("mzxw6yq", o.SecretKey.GetBase32Secret(SecretFormatFlags.None));
+            Assert.AreEqual("mzxw 6yq", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing));
+            Assert.AreEqual("mzxw6yq=", o.SecretKey.GetBase32Secret(SecretFormatFlags.Padding));
+            Assert.AreEqual("mzxw 6yq=", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
         }
 
         [TestMethod]
         public void OneTimePassword_Secret_Base32_8() {
             var o = new OneTimePassword("mzxw6ytb");
 
-            Assert.AreEqual("66-6F-6F-62-61", BitConverter.ToString(o.GetSecret()));
-            Assert.AreEqual("mzxw 6ytb", o.GetBase32Secret());
-            Assert.AreEqual("mzxw6ytb", o.GetBase32Secret(SecretFormatFlags.None));
-            Assert.AreEqual("mzxw 6ytb", o.GetBase32Secret(SecretFormatFlags.Spacing));
-            Assert.AreEqual("mzxw6ytb", o.GetBase32Secret(SecretFormatFlags.Padding));
-            Assert.AreEqual("mzxw 6ytb", o.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
+            Assert.AreEqual("66-6F-6F-62-61", BitConverter.ToString(o.SecretKey.GetSecret()));
+            Assert.AreEqual("mzxw 6ytb", o.SecretKey.GetBase32Secret());
+            Assert.AreEqual("mzxw6ytb", o.SecretKey.GetBase32Secret(SecretFormatFlags.None));
+            Assert.AreEqual("mzxw 6ytb", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing));
+            Assert.AreEqual("mzxw6ytb", o.SecretKey.GetBase32Secret(SecretFormatFlags.Padding));
+            Assert.AreEqual("mzxw 6ytb", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
         }
 
         [TestMethod]
         public void OneTimePassword_Secret_Base32_8p() {
             var o = new OneTimePassword("MZXW6YTB");
 
-            Assert.AreEqual("66-6F-6F-62-61", BitConverter.ToString(o.GetSecret()));
-            Assert.AreEqual("mzxw 6ytb", o.GetBase32Secret());
-            Assert.AreEqual("mzxw6ytb", o.GetBase32Secret(SecretFormatFlags.None));
-            Assert.AreEqual("mzxw 6ytb", o.GetBase32Secret(SecretFormatFlags.Spacing));
-            Assert.AreEqual("mzxw6ytb", o.GetBase32Secret(SecretFormatFlags.Padding));
-            Assert.AreEqual("mzxw 6ytb", o.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
+            Assert.AreEqual("66-6F-6F-62-61", BitConverter.ToString(o.SecretKey.GetSecret()));
+            Assert.AreEqual("mzxw 6ytb", o.SecretKey.GetBase32Secret());
+            Assert.AreEqual("mzxw6ytb", o.SecretKey.GetBase32Secret(SecretFormatFlags.None));
+            Assert.AreEqual("mzxw 6ytb", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing));
+            Assert.AreEqual("mzxw6ytb", o.SecretKey.GetBase32Secret(SecretFormatFlags.Padding));
+            Assert.AreEqual("mzxw 6ytb", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
         }
 
         [TestMethod]
         public void OneTimePassword_Secret_Base32_9() {
             var o = new OneTimePassword("mzxw6ytbo");
 
-            Assert.AreEqual("66-6F-6F-62-61-70", BitConverter.ToString(o.GetSecret()));
-            Assert.AreEqual("mzxw 6ytb oa", o.GetBase32Secret());
-            Assert.AreEqual("mzxw6ytboa", o.GetBase32Secret(SecretFormatFlags.None));
-            Assert.AreEqual("mzxw 6ytb oa", o.GetBase32Secret(SecretFormatFlags.Spacing));
-            Assert.AreEqual("mzxw6ytboa======", o.GetBase32Secret(SecretFormatFlags.Padding));
-            Assert.AreEqual("MZXW6YTBOA", o.GetBase32Secret(SecretFormatFlags.Uppercase));
-            Assert.AreEqual("mzxw 6ytb oa== ====", o.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
-            Assert.AreEqual("MZXW 6YTB OA", o.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Uppercase));
-            Assert.AreEqual("MZXW6YTBOA======", o.GetBase32Secret(SecretFormatFlags.Padding | SecretFormatFlags.Uppercase));
-            Assert.AreEqual("MZXW 6YTB OA== ====", o.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding | SecretFormatFlags.Uppercase));
+            Assert.AreEqual("66-6F-6F-62-61-70", BitConverter.ToString(o.SecretKey.GetSecret()));
+            Assert.AreEqual("mzxw 6ytb oa", o.SecretKey.GetBase32Secret());
+            Assert.AreEqual("mzxw6ytboa", o.SecretKey.GetBase32Secret(SecretFormatFlags.None));
+            Assert.AreEqual("mzxw 6ytb oa", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing));
+            Assert.AreEqual("mzxw6ytboa======", o.SecretKey.GetBase32Secret(SecretFormatFlags.Padding));
+            Assert.AreEqual("MZXW6YTBOA", o.SecretKey.GetBase32Secret(SecretFormatFlags.Uppercase));
+            Assert.AreEqual("mzxw 6ytb oa== ====", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
+            Assert.AreEqual("MZXW 6YTB OA", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Uppercase));
+            Assert.AreEqual("MZXW6YTBOA======", o.SecretKey.GetBase32Secret(SecretFormatFlags.Padding | SecretFormatFlags.Uppercase));
+            Assert.AreEqual("MZXW 6YTB OA== ====", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding | SecretFormatFlags.Uppercase));
         }
 
         [TestMethod]
         public void OneTimePassword_Secret_Base32_10() {
             var o = new OneTimePassword("mzxw6ytboi");
 
-            Assert.AreEqual("66-6F-6F-62-61-72", BitConverter.ToString(o.GetSecret()));
-            Assert.AreEqual("mzxw 6ytb oi", o.GetBase32Secret());
-            Assert.AreEqual("mzxw6ytboi", o.GetBase32Secret(SecretFormatFlags.None));
-            Assert.AreEqual("mzxw 6ytb oi", o.GetBase32Secret(SecretFormatFlags.Spacing));
-            Assert.AreEqual("mzxw6ytboi======", o.GetBase32Secret(SecretFormatFlags.Padding));
-            Assert.AreEqual("mzxw 6ytb oi== ====", o.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
+            Assert.AreEqual("66-6F-6F-62-61-72", BitConverter.ToString(o.SecretKey.GetSecret()));
+            Assert.AreEqual("mzxw 6ytb oi", o.SecretKey.GetBase32Secret());
+            Assert.AreEqual("mzxw6ytboi", o.SecretKey.GetBase32Secret(SecretFormatFlags.None));
+            Assert.AreEqual("mzxw 6ytb oi", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing));
+            Assert.AreEqual("mzxw6ytboi======", o.SecretKey.GetBase32Secret(SecretFormatFlags.Padding));
+            Assert.AreEqual("mzxw 6ytb oi== ====", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
         }
 
         [TestMethod]
         public void OneTimePassword_Secret_Base32_10p() {
             var o = new OneTimePassword("MZXW6YTBOI======");
 
-            Assert.AreEqual("66-6F-6F-62-61-72", BitConverter.ToString(o.GetSecret()));
-            Assert.AreEqual("mzxw 6ytb oi", o.GetBase32Secret());
-            Assert.AreEqual("mzxw6ytboi", o.GetBase32Secret(SecretFormatFlags.None));
-            Assert.AreEqual("mzxw 6ytb oi", o.GetBase32Secret(SecretFormatFlags.Spacing));
-            Assert.AreEqual("mzxw6ytboi======", o.GetBase32Secret(SecretFormatFlags.Padding));
-            Assert.AreEqual("mzxw 6ytb oi== ====", o.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
+            Assert.AreEqual("66-6F-6F-62-61-72", BitConverter.ToString(o.SecretKey.GetSecret()));
+            Assert.AreEqual("mzxw 6ytb oi", o.SecretKey.GetBase32Secret());
+            Assert.AreEqual("mzxw6ytboi", o.SecretKey.GetBase32Secret(SecretFormatFlags.None));
+            Assert.AreEqual("mzxw 6ytb oi", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing));
+            Assert.AreEqual("mzxw6ytboi======", o.SecretKey.GetBase32Secret(SecretFormatFlags.Padding));
+            Assert.AreEqual("mzxw 6ytb oi== ====", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
         }
 
         [TestMethod]
         public void OneTimePassword_Secret_Base32_16() {
             var o = new OneTimePassword("jbsw y3dp ehpk 3pxp");
 
-            Assert.AreEqual("48-65-6C-6C-6F-21-DE-AD-BE-EF", BitConverter.ToString(o.GetSecret()));
-            Assert.AreEqual("jbsw y3dp ehpk 3pxp", o.GetBase32Secret());
-            Assert.AreEqual("jbswy3dpehpk3pxp", o.GetBase32Secret(SecretFormatFlags.None));
-            Assert.AreEqual("jbsw y3dp ehpk 3pxp", o.GetBase32Secret(SecretFormatFlags.Spacing));
-            Assert.AreEqual("jbswy3dpehpk3pxp", o.GetBase32Secret(SecretFormatFlags.Padding));
-            Assert.AreEqual("jbsw y3dp ehpk 3pxp", o.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
+            Assert.AreEqual("48-65-6C-6C-6F-21-DE-AD-BE-EF", BitConverter.ToString(o.SecretKey.GetSecret()));
+            Assert.AreEqual("jbsw y3dp ehpk 3pxp", o.SecretKey.GetBase32Secret());
+            Assert.AreEqual("jbswy3dpehpk3pxp", o.SecretKey.GetBase32Secret(SecretFormatFlags.None));
+            Assert.AreEqual("jbsw y3dp ehpk 3pxp", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing));
+            Assert.AreEqual("jbswy3dpehpk3pxp", o.SecretKey.GetBase32Secret(SecretFormatFlags.Padding));
+            Assert.AreEqual("jbsw y3dp ehpk 3pxp", o.SecretKey.GetBase32Secret(SecretFormatFlags.Spacing | SecretFormatFlags.Padding));
         }
 
         #endregion

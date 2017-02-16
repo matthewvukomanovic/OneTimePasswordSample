@@ -14,13 +14,13 @@ namespace Medo.Security.Cryptography
     /// Implementation of HOTP (RFC 4226) and TOTP (RFC 6238) one-time password algorithms.
     /// </summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "OneTime", Justification = "One time is more commonly written as two words.")]
-    public class SecretKey2
+    public class SecretKey
     {
 
         /// <summary>
         /// Create new instance with random 160-bit secret.
         /// </summary>
-        public SecretKey2()
+        public SecretKey()
         {
             using (var rng = RandomNumberGenerator.Create())
             {
@@ -36,7 +36,7 @@ namespace Medo.Security.Cryptography
         /// <param name="secret">Secret. It should not be shorter than 128 bits (16 bytes). Minimum of 160 bits (20 bytes) is strongly recommended.</param>
         /// <exception cref="System.ArgumentNullException">Secret cannot be null.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">Secret cannot be longer than 8192 bits (1024 bytes).</exception>
-        public SecretKey2(byte[] secret)
+        public SecretKey(byte[] secret)
         {
             if (secret == null) { throw new ArgumentNullException("secret", "Secret cannot be null."); }
             if (secret.Length > this.SecretBuffer.Length) { throw new ArgumentOutOfRangeException("secret", "Secret cannot be longer than 8192 bits (1024 bytes)."); }
@@ -52,7 +52,7 @@ namespace Medo.Security.Cryptography
         /// <param name="secret">Secret in Base32 encoding. It should not be shorter than 128 bits (16 bytes). Minimum of 160 bits (20 bytes) is strongly recommended.</param>
         /// <exception cref="System.ArgumentNullException">Secret cannot be null.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">Secret is not valid Base32 string. -or- Secret cannot be longer than 8192 bits (1024 bytes).</exception>
-        public SecretKey2(string secret)
+        public SecretKey(string secret)
         {
             if (secret == null) { throw new ArgumentNullException("secret", "Secret cannot be null."); }
 
