@@ -80,7 +80,7 @@ namespace Medo.Security.Cryptography {
                     this._timeStep = 0;
                     this.Counter = 0;
                 } else {
-                    if ((value < 15) || (value > 300)) { throw new ArgumentOutOfRangeException("value", "Time step must be between 15 and 300 seconds."); }
+                    if ((value < 0) || (value > 86400)) { throw new ArgumentOutOfRangeException("value", "Time step must be between 0 and 86400 seconds."); }
                     this._timeStep = value;
                 }
             }

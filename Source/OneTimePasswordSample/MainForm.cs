@@ -31,6 +31,7 @@ namespace OneTimePasswordSample {
                 otp = new OneTimePassword(textKey);
                 SetDigits();
                 UpdateAlgorithm();
+                UpdateUsingTime();
                 SetCodeFromCurrent();
             }
             catch (ArgumentException)
@@ -57,6 +58,60 @@ namespace OneTimePasswordSample {
             }
         }
 
+        private bool usingTime = true;
+        private int timeSelected = 30;
+        private long counter = 0;
+
+        private int settingNumber = 0;
+        private bool UpdateUsingTime()
+        {
+            var valueUpdated = false;
+            var temp = otp;
+            if (temp != null)
+            {
+                var existingUsingTime = temp.TimeStep != 0;
+
+                if (existingUsingTime != usingTime)
+                {
+                    if (usingTime)
+                    {
+                        if (temp.TimeStep != timeSelected)
+                        {
+                            temp.TimeStep = timeSelected;
+                            counter = temp.Counter;
+                            valueUpdated = true;
+                        }
+                    }
+                    else
+                    {
+                        temp.TimeStep = 0;
+                        temp.Counter = counter;
+                        valueUpdated = true;
+                    }
+                }
+                else
+                {
+                    if (usingTime)
+                    {
+                        if (temp.TimeStep != timeSelected)
+                        {
+                            temp.TimeStep = timeSelected;
+                            valueUpdated = true;
+                        }
+                    }
+                    else
+                    {
+                        if (temp.Counter != counter)
+                        {
+                            temp.Counter = counter;
+                            valueUpdated = true;
+                        }
+                    }
+                }
+            }
+
+            return valueUpdated;
+        }
 
         private void SetCodeFromCurrent()
         {
@@ -71,12 +126,32 @@ namespace OneTimePasswordSample {
                 return "Fix key!";
             }
 
-            return temp.GetFormattedCode();
+            var code = temp.GetFormattedCode();
+
+            lock (this)
+            {
+                try
+                {
+                    settingNumber ++;
+                    counter = temp.Counter;
+                    numericUpDown4.Value = counter;
+                }
+                finally
+                {
+                    settingNumber --;
+                }
+            }
+
+            return code;
+
         }
 
 
         private void tmrUpdate_Tick(object sender, System.EventArgs e) {
-            SetCodeFromCurrent();
+            if (checkBox2.Checked)
+            {
+                SetCodeFromCurrent();
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -113,6 +188,63 @@ namespace OneTimePasswordSample {
             }
 
             UpdateAlgorithm();
+            SetCodeFromCurrent();
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            usingTime = checkBox1.Checked;
+            UpdateUsingTimeWithRefreshIfRequired();
+        }
+
+        private void numericUpDown3_ValueChanged(object sender, EventArgs e)
+        {
+            timeSelected = (int) numericUpDown3.Value;
+            UpdateUsingTimeWithRefreshIfRequired();
+        }
+
+        private void numericUpDown4_ValueChanged(object sender, EventArgs e)
+        {
+            if (usingTime)
+            {
+                return;
+            }
+            var numberUpdated = false;
+            if (settingNumber != 0)
+            {
+                return;
+            }
+            lock (this)
+            {
+                if (settingNumber != 0)
+                {
+                    return;
+                }
+                if (counter != (long) numericUpDown4.Value)
+                {
+                    settingNumber++;
+                    numberUpdated = true;
+                    counter = (long) numericUpDown4.Value;
+                    settingNumber--;
+                }
+            }
+
+            if (numberUpdated)
+            {
+                UpdateUsingTimeWithRefreshIfRequired();
+            }
+        }
+
+        private void UpdateUsingTimeWithRefreshIfRequired()
+        {
+            if (UpdateUsingTime())
+            {
+                SetCodeFromCurrent();
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
             SetCodeFromCurrent();
         }
     }
