@@ -151,6 +151,47 @@ namespace Medo.Security.Cryptography {
             return this.GetCode(this.Digits);
         }
 
+        public string GetFormattedCode()
+        {
+            var digits = Digits;
+            return GetFormattedCode(digits);
+        }
+
+        public string GetFormattedCode(int digits)
+        {
+            return GetCode(digits).ToString(GetFormatStringForDigits(digits));
+        }
+
+        private static string GetFormatStringForDigits(int digits)
+        {
+            string formatString;
+            switch (digits)
+            {
+                case 4:
+                    formatString = "0000";
+                    break;
+                case 5:
+                    formatString = "00 000";
+                    break;
+                case 6:
+                    formatString = "000 000";
+                    break;
+                case 7:
+                    formatString = "00 00 000";
+                    break;
+                case 8:
+                    formatString = "0000 0000";
+                    break;
+                case 9:
+                    formatString = "000 000 000";
+                    break;
+                default:
+                    formatString = "";
+                    break;
+            }
+            return formatString;
+        }
+
         private int cachedDigits;
         private long cachedCounter = -1;
         private int cachedCode;

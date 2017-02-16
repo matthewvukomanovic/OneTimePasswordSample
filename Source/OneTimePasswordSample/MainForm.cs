@@ -29,11 +29,21 @@ namespace OneTimePasswordSample {
             try
             {
                 otp = new OneTimePassword(textKey);
+                SetDigits();
                 SetCodeFromCurrent();
             }
             catch (ArgumentException)
             {
                 otp = null;
+            }
+        }
+
+        private void SetDigits(int value)
+        {
+            var temp = otp;
+            if (temp != null)
+            {
+                temp.Digits = value;
             }
         }
 
@@ -45,9 +55,14 @@ namespace OneTimePasswordSample {
         private string GetCode()
         {
             var temp = otp;
+            if (temp == null)
+            {
+                return "Fix key!";
+            }
 
-            return temp != null ? temp.GetCode().ToString("000 000") : "Fix key!";
+            return temp.GetFormattedCode();
         }
+
 
         private void tmrUpdate_Tick(object sender, System.EventArgs e) {
             SetCodeFromCurrent();
@@ -56,6 +71,17 @@ namespace OneTimePasswordSample {
         private void button1_Click(object sender, EventArgs e)
         {
             txtSecret.Text = new SecretKey((int)numericUpDown1.Value).GetBase32Secret();
+        }
+
+        private void numericUpDown2_ValueChanged(object sender, EventArgs e)
+        {
+            SetDigits();
+            SetCodeFromCurrent();
+        }
+
+        private void SetDigits()
+        {
+            SetDigits((int) numericUpDown2.Value);
         }
     }
 }
