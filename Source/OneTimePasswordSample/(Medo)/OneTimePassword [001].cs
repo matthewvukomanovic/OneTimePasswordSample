@@ -210,7 +210,11 @@ namespace Medo.Security.Cryptography {
 
             var counter = this.Counter;
 
-            if ((this.cachedCounter == counter) && (this.cachedDigits == digits) && cachedAlgorithm != null && cachedAlgorithm.Value.Equals(Algorithm)) { return this.cachedCode; } //to avoid recalculation if all is the same
+            if ((this.cachedCounter == counter) && (this.cachedDigits == digits) && cachedAlgorithm != null && cachedAlgorithm.Value.Equals(Algorithm))
+            {
+                if (this.TimeStep == 0) { this.Counter = counter + 1; }
+                return this.cachedCode;
+            } //to avoid recalculation if all is the same
 
             var code = GetCode(counter, digits);
             if (this.TimeStep == 0) { this.Counter = counter + 1; }
