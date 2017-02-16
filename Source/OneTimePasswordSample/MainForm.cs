@@ -30,6 +30,7 @@ namespace OneTimePasswordSample {
             {
                 otp = new OneTimePassword(textKey);
                 SetDigits();
+                UpdateAlgorithm();
                 SetCodeFromCurrent();
             }
             catch (ArgumentException)
@@ -46,6 +47,16 @@ namespace OneTimePasswordSample {
                 temp.Digits = value;
             }
         }
+
+        private void UpdateAlgorithm()
+        {
+            var temp = otp;
+            if (temp != null)
+            {
+                temp.Algorithm = algorithmSelected;
+            }
+        }
+
 
         private void SetCodeFromCurrent()
         {
@@ -82,6 +93,27 @@ namespace OneTimePasswordSample {
         private void SetDigits()
         {
             SetDigits((int) numericUpDown2.Value);
+        }
+
+        OneTimePasswordAlgorithm algorithmSelected = OneTimePasswordAlgorithm.Sha1;
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton3.Checked)
+            {
+                algorithmSelected = OneTimePasswordAlgorithm.Sha512;
+            }
+            else if (radioButton2.Checked)
+            {
+                algorithmSelected = OneTimePasswordAlgorithm.Sha256;
+            }
+            else
+            {
+                algorithmSelected = OneTimePasswordAlgorithm.Sha1;
+            }
+
+            UpdateAlgorithm();
+            SetCodeFromCurrent();
         }
     }
 }

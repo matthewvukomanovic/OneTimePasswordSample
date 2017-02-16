@@ -168,19 +168,19 @@ namespace Medo.Security.Cryptography {
             switch (digits)
             {
                 case 4:
-                    formatString = "0000";
+                    formatString = "00 00";
                     break;
                 case 5:
-                    formatString = "00 000";
+                    formatString = "00 0 00";
                     break;
                 case 6:
                     formatString = "000 000";
                     break;
                 case 7:
-                    formatString = "00 00 000";
+                    formatString = "00 000 00";
                     break;
                 case 8:
-                    formatString = "0000 0000";
+                    formatString = "000 00 000";
                     break;
                 case 9:
                     formatString = "000 000 000";
@@ -195,6 +195,8 @@ namespace Medo.Security.Cryptography {
         private int cachedDigits;
         private long cachedCounter = -1;
         private int cachedCode;
+        private OneTimePasswordAlgorithm? cachedAlgorithm = null;
+
 
         /// <summary>
         /// Returns code.
@@ -208,7 +210,7 @@ namespace Medo.Security.Cryptography {
 
             var counter = this.Counter;
 
-            if ((this.cachedCounter == counter) && (this.cachedDigits == digits)) { return this.cachedCode; } //to avoid recalculation if all is the same
+            if ((this.cachedCounter == counter) && (this.cachedDigits == digits) && cachedAlgorithm != null && cachedAlgorithm.Value.Equals(Algorithm)) { return this.cachedCode; } //to avoid recalculation if all is the same
 
             var code = GetCode(counter, digits);
             if (this.TimeStep == 0) { this.Counter = counter + 1; }
@@ -216,6 +218,7 @@ namespace Medo.Security.Cryptography {
             this.cachedDigits = digits;
             this.cachedCounter = counter;
             this.cachedCode = code;
+            this.cachedAlgorithm = Algorithm;
 
             return code;
         }
