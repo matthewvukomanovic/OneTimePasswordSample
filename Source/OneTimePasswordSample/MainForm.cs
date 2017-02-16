@@ -18,22 +18,44 @@ namespace OneTimePasswordSample {
         }
 
 
-        private void txtSecret_TextChanged(object sender, System.EventArgs e) {
-            try {
-                otp = new OneTimePassword(txtSecret.Text);
-            } catch (ArgumentException) {
+        private void txtSecret_TextChanged(object sender, System.EventArgs e)
+        {
+            var textKey = txtSecret.Text;
+            SetNewKeyFromText(textKey);
+        }
+
+        private void SetNewKeyFromText(string textKey)
+        {
+            try
+            {
+                otp = new OneTimePassword(textKey);
+                SetCodeFromCurrent();
+            }
+            catch (ArgumentException)
+            {
                 otp = null;
             }
         }
 
-
-        private void tmrUpdate_Tick(object sender, System.EventArgs e) {
-            if (otp != null) {
-                txtCode.Text = otp.GetCode().ToString("000000");
-            } else {
-                txtCode.Text = "Fix key!";
-            }
+        private void SetCodeFromCurrent()
+        {
+            txtCode.Text = GetCode();
         }
 
+        private string GetCode()
+        {
+            var temp = otp;
+
+            return temp != null ? temp.GetCode().ToString("000 000") : "Fix key!";
+        }
+
+        private void tmrUpdate_Tick(object sender, System.EventArgs e) {
+            SetCodeFromCurrent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            txtSecret.Text = new SecretKey((int)numericUpDown1.Value).GetBase32Secret();
+        }
     }
 }

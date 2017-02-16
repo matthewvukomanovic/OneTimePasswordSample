@@ -29,14 +29,18 @@
             this.txtCode = new System.Windows.Forms.TextBox();
             this.lblCode = new System.Windows.Forms.Label();
             this.tmrUpdate = new System.Windows.Forms.Timer(this.components);
+            this.button1 = new System.Windows.Forms.Button();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
             // lblSecret
             // 
             this.lblSecret.AutoSize = true;
-            this.lblSecret.Location = new System.Drawing.Point(12, 9);
+            this.lblSecret.Location = new System.Drawing.Point(9, 7);
+            this.lblSecret.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblSecret.Name = "lblSecret";
-            this.lblSecret.Size = new System.Drawing.Size(79, 17);
+            this.lblSecret.Size = new System.Drawing.Size(61, 13);
             this.lblSecret.TabIndex = 0;
             this.lblSecret.Text = "Secret key:";
             // 
@@ -44,30 +48,32 @@
             // 
             this.txtSecret.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtSecret.Location = new System.Drawing.Point(12, 29);
+            this.txtSecret.Location = new System.Drawing.Point(9, 24);
+            this.txtSecret.Margin = new System.Windows.Forms.Padding(2);
             this.txtSecret.Name = "txtSecret";
-            this.txtSecret.Size = new System.Drawing.Size(228, 22);
+            this.txtSecret.Size = new System.Drawing.Size(220, 20);
             this.txtSecret.TabIndex = 1;
             this.txtSecret.Text = "jbsw y3dp ehpk 3pxp";
             this.txtSecret.TextChanged += new System.EventHandler(this.txtSecret_TextChanged);
             // 
             // txtCode
             // 
-            this.txtCode.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.txtCode.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtCode.Location = new System.Drawing.Point(12, 99);
+            this.txtCode.Location = new System.Drawing.Point(9, 61);
+            this.txtCode.Margin = new System.Windows.Forms.Padding(2);
             this.txtCode.Name = "txtCode";
             this.txtCode.ReadOnly = true;
-            this.txtCode.Size = new System.Drawing.Size(228, 22);
+            this.txtCode.Size = new System.Drawing.Size(220, 20);
             this.txtCode.TabIndex = 3;
             // 
             // lblCode
             // 
-            this.lblCode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblCode.AutoSize = true;
-            this.lblCode.Location = new System.Drawing.Point(12, 79);
+            this.lblCode.Location = new System.Drawing.Point(9, 46);
+            this.lblCode.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblCode.Name = "lblCode";
-            this.lblCode.Size = new System.Drawing.Size(45, 17);
+            this.lblCode.Size = new System.Drawing.Size(35, 13);
             this.lblCode.TabIndex = 2;
             this.lblCode.Text = "Code:";
             // 
@@ -77,21 +83,52 @@
             this.tmrUpdate.Interval = 1000;
             this.tmrUpdate.Tick += new System.EventHandler(this.tmrUpdate_Tick);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(9, 86);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(127, 23);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "Gen New Key";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // numericUpDown1
+            // 
+            this.numericUpDown1.Location = new System.Drawing.Point(143, 86);
+            this.numericUpDown1.Maximum = new decimal(new int[] {
+            1024,
+            0,
+            0,
+            0});
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.Size = new System.Drawing.Size(86, 20);
+            this.numericUpDown1.TabIndex = 5;
+            this.numericUpDown1.Value = new decimal(new int[] {
+            40,
+            0,
+            0,
+            0});
+            // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(252, 133);
+            this.ClientSize = new System.Drawing.Size(237, 233);
+            this.Controls.Add(this.numericUpDown1);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.txtCode);
             this.Controls.Add(this.lblCode);
             this.Controls.Add(this.txtSecret);
             this.Controls.Add(this.lblSecret);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "MainForm";
             this.Text = "TOTP";
             this.Load += new System.EventHandler(this.Form_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -104,6 +141,8 @@
         private System.Windows.Forms.TextBox txtCode;
         private System.Windows.Forms.Label lblCode;
         private System.Windows.Forms.Timer tmrUpdate;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.NumericUpDown numericUpDown1;
     }
 }
 

@@ -20,13 +20,17 @@ namespace Medo.Security.Cryptography
         /// <summary>
         /// Create new instance with random 160-bit secret.
         /// </summary>
-        public SecretKey()
+        public SecretKey() : this(20) //160 bits
+        {
+        }
+
+        public SecretKey(int length)
         {
             using (var rng = RandomNumberGenerator.Create())
             {
                 rng.GetBytes(this.SecretBuffer);
             }
-            this.SecretLength = 20; //160 bits
+            this.SecretLength = length;
             ProtectSecret();
         }
 
@@ -111,21 +115,11 @@ namespace Medo.Security.Cryptography
         }
 
         /// <summary>
-        /// Returns secret as a Base32 string.
-        /// String will be shown in quads and without padding.
-        /// It is up to the caller to secure given string.
-        /// </summary>
-        public string GetBase32Secret()
-        {
-            return this.GetBase32Secret(SecretFormatFlags.Spacing);
-        }
-
-        /// <summary>
         /// Returns secret as a Base32 string with custom formatting.
         /// It is up to the caller to secure given string.
         /// </summary>
         /// <param name="format">Format of Base32 string.</param>
-        public string GetBase32Secret(SecretFormatFlags format)
+        public string GetBase32Secret(SecretFormatFlags format = SecretFormatFlags.Spacing)
         {
             this.UnprotectSecret();
             try
