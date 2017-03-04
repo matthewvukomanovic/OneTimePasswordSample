@@ -7,18 +7,18 @@ namespace OneTimePasswordSample {
     internal partial class MainForm : Form {
         public MainForm() {
             InitializeComponent();
-            this.Font = new Font(SystemFonts.MessageBoxFont.FontFamily, SystemFonts.MessageBoxFont.Size * 2F);
+            Font = new Font(SystemFonts.MessageBoxFont.FontFamily, SystemFonts.MessageBoxFont.Size * 2F);
         }
 
-        private OneTimePassword otp;
+        private OneTimePassword _otp;
 
-        private void Form_Load(object sender, System.EventArgs e) {
-            otp = new OneTimePassword(txtSecret.Text);
+        private void Form_Load(object sender, EventArgs e) {
+            _otp = new OneTimePassword(txtSecret.Text);
             tmrUpdate_Tick(null, null);
         }
 
 
-        private void txtSecret_TextChanged(object sender, System.EventArgs e)
+        private void txtSecret_TextChanged(object sender, EventArgs e)
         {
             var textKey = txtSecret.Text;
             SetNewKeyFromText(textKey);
@@ -28,7 +28,7 @@ namespace OneTimePasswordSample {
         {
             try
             {
-                otp = new OneTimePassword(textKey);
+                _otp = new OneTimePassword(textKey);
                 SetDigits();
                 UpdateAlgorithm();
                 UpdateUsingTime();
@@ -36,13 +36,13 @@ namespace OneTimePasswordSample {
             }
             catch (ArgumentException)
             {
-                otp = null;
+                _otp = null;
             }
         }
 
         private void SetDigits(int value)
         {
-            var temp = otp;
+            var temp = _otp;
             if (temp != null)
             {
                 temp.Digits = value;
@@ -51,59 +51,59 @@ namespace OneTimePasswordSample {
 
         private void UpdateAlgorithm()
         {
-            var temp = otp;
+            var temp = _otp;
             if (temp != null)
             {
-                temp.Algorithm = algorithmSelected;
+                temp.Algorithm = _algorithmSelected;
             }
         }
 
-        private bool usingTime = true;
-        private int timeSelected = 30;
-        private long counter = 0;
+        private bool _usingTime = true;
+        private int _timeSelected = 30;
+        private long _counter = 0;
 
-        private int settingNumber = 0;
+        private int _settingNumber = 0;
         private bool UpdateUsingTime()
         {
             var valueUpdated = false;
-            var temp = otp;
+            var temp = _otp;
             if (temp != null)
             {
                 var existingUsingTime = temp.TimeStep != 0;
 
-                if (existingUsingTime != usingTime)
+                if (existingUsingTime != _usingTime)
                 {
-                    if (usingTime)
+                    if (_usingTime)
                     {
-                        if (temp.TimeStep != timeSelected)
+                        if (temp.TimeStep != _timeSelected)
                         {
-                            temp.TimeStep = timeSelected;
-                            counter = temp.Counter;
+                            temp.TimeStep = _timeSelected;
+                            _counter = temp.Counter;
                             valueUpdated = true;
                         }
                     }
                     else
                     {
                         temp.TimeStep = 0;
-                        temp.Counter = counter;
+                        temp.Counter = _counter;
                         valueUpdated = true;
                     }
                 }
                 else
                 {
-                    if (usingTime)
+                    if (_usingTime)
                     {
-                        if (temp.TimeStep != timeSelected)
+                        if (temp.TimeStep != _timeSelected)
                         {
-                            temp.TimeStep = timeSelected;
+                            temp.TimeStep = _timeSelected;
                             valueUpdated = true;
                         }
                     }
                     else
                     {
-                        if (temp.Counter != counter)
+                        if (temp.Counter != _counter)
                         {
-                            temp.Counter = counter;
+                            temp.Counter = _counter;
                             valueUpdated = true;
                         }
                     }
@@ -120,7 +120,7 @@ namespace OneTimePasswordSample {
 
         private string GetCode()
         {
-            var temp = otp;
+            var temp = _otp;
             if (temp == null)
             {
                 return "Fix key!";
@@ -132,13 +132,13 @@ namespace OneTimePasswordSample {
             {
                 try
                 {
-                    settingNumber ++;
-                    counter = temp.Counter;
-                    numericUpDown4.Value = counter;
+                    _settingNumber ++;
+                    _counter = temp.Counter;
+                    numericUpDown4.Value = _counter;
                 }
                 finally
                 {
-                    settingNumber --;
+                    _settingNumber --;
                 }
             }
 
@@ -147,7 +147,7 @@ namespace OneTimePasswordSample {
         }
 
 
-        private void tmrUpdate_Tick(object sender, System.EventArgs e) {
+        private void tmrUpdate_Tick(object sender, EventArgs e) {
             if (checkBox2.Checked)
             {
                 SetCodeFromCurrent();
@@ -170,21 +170,21 @@ namespace OneTimePasswordSample {
             SetDigits((int) numericUpDown2.Value);
         }
 
-        OneTimePasswordAlgorithm algorithmSelected = OneTimePasswordAlgorithm.Sha1;
+        OneTimePasswordAlgorithm _algorithmSelected = OneTimePasswordAlgorithm.Sha1;
 
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButton3.Checked)
             {
-                algorithmSelected = OneTimePasswordAlgorithm.Sha512;
+                _algorithmSelected = OneTimePasswordAlgorithm.Sha512;
             }
             else if (radioButton2.Checked)
             {
-                algorithmSelected = OneTimePasswordAlgorithm.Sha256;
+                _algorithmSelected = OneTimePasswordAlgorithm.Sha256;
             }
             else
             {
-                algorithmSelected = OneTimePasswordAlgorithm.Sha1;
+                _algorithmSelected = OneTimePasswordAlgorithm.Sha1;
             }
 
             UpdateAlgorithm();
@@ -193,39 +193,39 @@ namespace OneTimePasswordSample {
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            usingTime = checkBox1.Checked;
+            _usingTime = checkBox1.Checked;
             UpdateUsingTimeWithRefreshIfRequired();
         }
 
         private void numericUpDown3_ValueChanged(object sender, EventArgs e)
         {
-            timeSelected = (int) numericUpDown3.Value;
+            _timeSelected = (int) numericUpDown3.Value;
             UpdateUsingTimeWithRefreshIfRequired();
         }
 
         private void numericUpDown4_ValueChanged(object sender, EventArgs e)
         {
-            if (usingTime)
+            if (_usingTime)
             {
                 return;
             }
             var numberUpdated = false;
-            if (settingNumber != 0)
+            if (_settingNumber != 0)
             {
                 return;
             }
             lock (this)
             {
-                if (settingNumber != 0)
+                if (_settingNumber != 0)
                 {
                     return;
                 }
-                if (counter != (long) numericUpDown4.Value)
+                if (_counter != (long) numericUpDown4.Value)
                 {
-                    settingNumber++;
+                    _settingNumber++;
                     numberUpdated = true;
-                    counter = (long) numericUpDown4.Value;
-                    settingNumber--;
+                    _counter = (long) numericUpDown4.Value;
+                    _settingNumber--;
                 }
             }
 

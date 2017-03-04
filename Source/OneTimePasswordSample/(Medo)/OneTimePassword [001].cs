@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Security.Cryptography;
 
 namespace Medo.Security.Cryptography {
@@ -59,10 +60,10 @@ namespace Medo.Security.Cryptography {
         /// </summary>
         /// <exception cref="System.ArgumentOutOfRangeException">Number of digits to return must be between 4 and 9.</exception>
         public int Digits {
-            get { return this._digits; }
+            get { return _digits; }
             set {
                 if ((value < 4) || (value > 9)) { throw new ArgumentOutOfRangeException("value", "Number of digits to return must be between 4 and 9."); }
-                this._digits = value;
+                _digits = value;
             }
         }
 
@@ -74,20 +75,20 @@ namespace Medo.Security.Cryptography {
         /// </summary>
         /// <exception cref="System.ArgumentOutOfRangeException">Time step must be between 15 and 300 seconds.</exception>
         public int TimeStep {
-            get { return this._timeStep; }
+            get { return _timeStep; }
             set {
                 if (value == 0) {
-                    this._timeStep = 0;
-                    this.Counter = 0;
+                    _timeStep = 0;
+                    Counter = 0;
                 } else {
                     if ((value < 0) || (value > 86400)) { throw new ArgumentOutOfRangeException("value", "Time step must be between 0 and 86400 seconds."); }
-                    this._timeStep = value;
+                    _timeStep = value;
                 }
             }
         }
 
-        private readonly DateTime Epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-        private DateTime TestTime = DateTime.MinValue;
+        private readonly DateTime _epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        private DateTime _testTime = DateTime.MinValue;
 
         private long _counter = 0;
         /// <summary>
@@ -98,18 +99,18 @@ namespace Medo.Security.Cryptography {
         /// <exception cref="System.NotSupportedException">Counter value can only be set in HOTP mode (time step is zero).</exception>
         public long Counter {
             get {
-                if (this.TimeStep == 0) {
-                    return this._counter;
+                if (TimeStep == 0) {
+                    return _counter;
                 } else {
-                    var currTime = (this.TestTime > DateTime.MinValue) ? this.TestTime : DateTime.UtcNow;
-                    var seconds = (currTime.Ticks - Epoch.Ticks) / 10000000;
-                    return (seconds / this.TimeStep);
+                    var currTime = (_testTime > DateTime.MinValue) ? _testTime : DateTime.UtcNow;
+                    var seconds = (currTime.Ticks - _epoch.Ticks) / 10000000;
+                    return (seconds / TimeStep);
                 }
             }
             set {
-                if (this.TimeStep == 0) {
+                if (TimeStep == 0) {
                     if (value < 0) { throw new ArgumentOutOfRangeException("value", "Counter value must be a positive number."); }
-                    this._counter = value;
+                    _counter = value;
                 } else {
                     throw new NotSupportedException("Counter value can only be set in HOTP mode (time step is zero).");
                 }
@@ -122,7 +123,7 @@ namespace Medo.Security.Cryptography {
         /// </summary>
         /// <exception cref="System.ArgumentOutOfRangeException">Unknown algorithm.</exception>
         public OneTimePasswordAlgorithm Algorithm {
-            get { return this._algorithm; }
+            get { return _algorithm; }
             set {
                 switch (value) {
                     case OneTimePasswordAlgorithm.Sha1:
@@ -130,7 +131,7 @@ namespace Medo.Security.Cryptography {
                     case OneTimePasswordAlgorithm.Sha512: break;
                     default: throw new ArgumentOutOfRangeException("value", "Unknown algorithm.");
                 }
-                this._algorithm = value;
+                _algorithm = value;
             }
         }
 
@@ -148,7 +149,7 @@ namespace Medo.Security.Cryptography {
         /// In HOTP mode (time step is zero), counter will be automatically increased. 
         /// </summary>
         public int GetCode() {
-            return this.GetCode(this.Digits);
+            return GetCode(Digits);
         }
 
         public string GetFormattedCode()
@@ -192,10 +193,10 @@ namespace Medo.Security.Cryptography {
             return formatString;
         }
 
-        private int cachedDigits;
-        private long cachedCounter = -1;
-        private int cachedCode;
-        private OneTimePasswordAlgorithm? cachedAlgorithm = null;
+        private int _cachedDigits;
+        private long _cachedCounter = -1;
+        private int _cachedCode;
+        private OneTimePasswordAlgorithm? _cachedAlgorithm = null;
 
 
         /// <summary>
@@ -208,21 +209,21 @@ namespace Medo.Security.Cryptography {
         public int GetCode(int digits) {
             if ((digits < 4) || (digits > 9)) { throw new ArgumentOutOfRangeException("digits", "Number of digits to return must be between 4 and 9."); }
 
-            var counter = this.Counter;
+            var counter = Counter;
 
-            if ((this.cachedCounter == counter) && (this.cachedDigits == digits) && cachedAlgorithm != null && cachedAlgorithm.Value.Equals(Algorithm))
+            if ((_cachedCounter == counter) && (_cachedDigits == digits) && _cachedAlgorithm != null && _cachedAlgorithm.Value.Equals(Algorithm))
             {
-                if (this.TimeStep == 0) { this.Counter = counter + 1; }
-                return this.cachedCode;
+                if (TimeStep == 0) { Counter = counter + 1; }
+                return _cachedCode;
             } //to avoid recalculation if all is the same
 
             var code = GetCode(counter, digits);
-            if (this.TimeStep == 0) { this.Counter = counter + 1; }
+            if (TimeStep == 0) { Counter = counter + 1; }
 
-            this.cachedDigits = digits;
-            this.cachedCounter = counter;
-            this.cachedCode = code;
-            this.cachedAlgorithm = Algorithm;
+            _cachedDigits = digits;
+            _cachedCounter = counter;
+            _cachedCode = code;
+            _cachedAlgorithm = Algorithm;
 
             return code;
         }
@@ -236,11 +237,12 @@ namespace Medo.Security.Cryptography {
                 if (BitConverter.IsLittleEndian) { Array.Reverse(counterBytes, 0, 8); }
                 HMAC hmac = null;
                 try {
-                    switch (this.Algorithm) {
+                    switch (Algorithm) {
                         case OneTimePasswordAlgorithm.Sha1: hmac = new HMACSHA1(secret); break;
                         case OneTimePasswordAlgorithm.Sha256: hmac = new HMACSHA256(secret); break;
                         case OneTimePasswordAlgorithm.Sha512: hmac = new HMACSHA512(secret); break;
                     }
+                    Debug.Assert(hmac != null, "hmac != null");
                     hash = hmac.ComputeHash(counterBytes);
                 } finally {
                     if (hmac != null) { hmac.Dispose(); }
@@ -288,14 +290,14 @@ namespace Medo.Security.Cryptography {
         /// </summary>
         /// <param name="code">Code to validate.</param>
         public bool IsCodeValid(int code) {
-            var currCode = GetCode(this.Counter, this.Digits);
-            var prevCode = GetCode(this.Counter - 1, this.Digits);
+            var currCode = GetCode(Counter, Digits);
+            var prevCode = GetCode(Counter - 1, Digits);
 
             var isCurrValid = (code == currCode);
-            var isPrevValid = (code == prevCode) && (this.Counter > 0); //don't check previous code if counter is zero; but calculate it anyhow (to keep timing)
+            var isPrevValid = (code == prevCode) && (Counter > 0); //don't check previous code if counter is zero; but calculate it anyhow (to keep timing)
             var isValid = isCurrValid || isPrevValid;
-            if ((this.TimeStep == 0) && isValid) {
-                this.Counter++;
+            if ((TimeStep == 0) && isValid) {
+                Counter++;
             }
             return isValid;
         }

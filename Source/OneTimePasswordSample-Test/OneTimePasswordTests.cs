@@ -357,27 +357,27 @@ namespace OneTimePasswordSample.Test {
             var o = new OneTimePassword(ASCIIEncoding.ASCII.GetBytes("12345678901234567890")) { Digits = 8 };
             var p = new PrivateObject(o);
 
-            p.SetFieldOrProperty("TestTime", new DateTime(1970, 01, 01, 00, 00, 59));
+            p.SetFieldOrProperty("_testTime", new DateTime(1970, 01, 01, 00, 00, 59));
             Assert.AreEqual(0x0000000000000001, o.Counter);
             Assert.AreEqual(94287082, o.GetCode());
 
-            p.SetFieldOrProperty("TestTime", new DateTime(2005, 03, 18, 01, 58, 29));
+            p.SetFieldOrProperty("_testTime", new DateTime(2005, 03, 18, 01, 58, 29));
             Assert.AreEqual(0x00000000023523EC, o.Counter);
             Assert.AreEqual(07081804, o.GetCode());
 
-            p.SetFieldOrProperty("TestTime", new DateTime(2005, 03, 18, 01, 58, 31));
+            p.SetFieldOrProperty("_testTime", new DateTime(2005, 03, 18, 01, 58, 31));
             Assert.AreEqual(0x00000000023523ED, o.Counter);
             Assert.AreEqual(14050471, o.GetCode());
 
-            p.SetFieldOrProperty("TestTime", new DateTime(2009, 02, 13, 23, 31, 30));
+            p.SetFieldOrProperty("_testTime", new DateTime(2009, 02, 13, 23, 31, 30));
             Assert.AreEqual(0x000000000273EF07, o.Counter);
             Assert.AreEqual(89005924, o.GetCode());
 
-            p.SetFieldOrProperty("TestTime", new DateTime(2033, 05, 18, 03, 33, 20));
+            p.SetFieldOrProperty("_testTime", new DateTime(2033, 05, 18, 03, 33, 20));
             Assert.AreEqual(0x0000000003F940AA, o.Counter);
             Assert.AreEqual(69279037, o.GetCode());
 
-            p.SetFieldOrProperty("TestTime", new DateTime(2603, 10, 11, 11, 33, 20));
+            p.SetFieldOrProperty("_testTime", new DateTime(2603, 10, 11, 11, 33, 20));
             Assert.AreEqual(0x0000000027BC86AA, o.Counter);
             Assert.AreEqual(65353130, o.GetCode());
         }
@@ -387,22 +387,22 @@ namespace OneTimePasswordSample.Test {
             var o = new OneTimePassword(ASCIIEncoding.ASCII.GetBytes("12345678901234567890")) { Digits = 8 };
             var p = new PrivateObject(o);
 
-            p.SetFieldOrProperty("TestTime", new DateTime(1970, 01, 01, 00, 00, 59));
+            p.SetFieldOrProperty("_testTime", new DateTime(1970, 01, 01, 00, 00, 59));
             Assert.AreEqual(true, o.IsCodeValid(94287082));
 
-            p.SetFieldOrProperty("TestTime", new DateTime(2005, 03, 18, 01, 58, 29));
+            p.SetFieldOrProperty("_testTime", new DateTime(2005, 03, 18, 01, 58, 29));
             Assert.AreEqual(true, o.IsCodeValid(07081804));
 
-            p.SetFieldOrProperty("TestTime", new DateTime(2005, 03, 18, 01, 58, 31));
+            p.SetFieldOrProperty("_testTime", new DateTime(2005, 03, 18, 01, 58, 31));
             Assert.AreEqual(true, o.IsCodeValid(14050471));
 
-            p.SetFieldOrProperty("TestTime", new DateTime(2009, 02, 13, 23, 31, 30));
+            p.SetFieldOrProperty("_testTime", new DateTime(2009, 02, 13, 23, 31, 30));
             Assert.AreEqual(true, o.IsCodeValid(89005924));
 
-            p.SetFieldOrProperty("TestTime", new DateTime(2033, 05, 18, 03, 33, 20));
+            p.SetFieldOrProperty("_testTime", new DateTime(2033, 05, 18, 03, 33, 20));
             Assert.AreEqual(true, o.IsCodeValid(69279037));
 
-            p.SetFieldOrProperty("TestTime", new DateTime(2603, 10, 11, 11, 33, 20));
+            p.SetFieldOrProperty("_testTime", new DateTime(2603, 10, 11, 11, 33, 20));
             Assert.AreEqual(true, o.IsCodeValid(65353130));
         }
 
@@ -412,27 +412,27 @@ namespace OneTimePasswordSample.Test {
             var o = new OneTimePassword(ASCIIEncoding.ASCII.GetBytes("12345678901234567890123456789012")) { Algorithm = OneTimePasswordAlgorithm.Sha256, Digits = 8 };
             var p = new PrivateObject(o);
 
-            p.SetFieldOrProperty("TestTime", new DateTime(1970, 01, 01, 00, 00, 59));
+            p.SetFieldOrProperty("_testTime", new DateTime(1970, 01, 01, 00, 00, 59));
             Assert.AreEqual(0x0000000000000001, o.Counter);
             Assert.AreEqual(46119246, o.GetCode());
 
-            p.SetFieldOrProperty("TestTime", new DateTime(2005, 03, 18, 01, 58, 29));
+            p.SetFieldOrProperty("_testTime", new DateTime(2005, 03, 18, 01, 58, 29));
             Assert.AreEqual(0x00000000023523EC, o.Counter);
             Assert.AreEqual(68084774, o.GetCode());
 
-            p.SetFieldOrProperty("TestTime", new DateTime(2005, 03, 18, 01, 58, 31));
+            p.SetFieldOrProperty("_testTime", new DateTime(2005, 03, 18, 01, 58, 31));
             Assert.AreEqual(0x00000000023523ED, o.Counter);
             Assert.AreEqual(67062674, o.GetCode());
 
-            p.SetFieldOrProperty("TestTime", new DateTime(2009, 02, 13, 23, 31, 30));
+            p.SetFieldOrProperty("_testTime", new DateTime(2009, 02, 13, 23, 31, 30));
             Assert.AreEqual(0x000000000273EF07, o.Counter);
             Assert.AreEqual(91819424, o.GetCode());
 
-            p.SetFieldOrProperty("TestTime", new DateTime(2033, 05, 18, 03, 33, 20));
+            p.SetFieldOrProperty("_testTime", new DateTime(2033, 05, 18, 03, 33, 20));
             Assert.AreEqual(0x0000000003F940AA, o.Counter);
             Assert.AreEqual(90698825, o.GetCode());
 
-            p.SetFieldOrProperty("TestTime", new DateTime(2603, 10, 11, 11, 33, 20));
+            p.SetFieldOrProperty("_testTime", new DateTime(2603, 10, 11, 11, 33, 20));
             Assert.AreEqual(0x0000000027BC86AA, o.Counter);
             Assert.AreEqual(77737706, o.GetCode());
         }
@@ -442,22 +442,22 @@ namespace OneTimePasswordSample.Test {
             var o = new OneTimePassword(ASCIIEncoding.ASCII.GetBytes("12345678901234567890123456789012")) { Algorithm = OneTimePasswordAlgorithm.Sha256, Digits = 8 };
             var p = new PrivateObject(o);
 
-            p.SetFieldOrProperty("TestTime", new DateTime(1970, 01, 01, 00, 00, 59));
+            p.SetFieldOrProperty("_testTime", new DateTime(1970, 01, 01, 00, 00, 59));
             Assert.AreEqual(true, o.IsCodeValid(46119246));
 
-            p.SetFieldOrProperty("TestTime", new DateTime(2005, 03, 18, 01, 58, 29));
+            p.SetFieldOrProperty("_testTime", new DateTime(2005, 03, 18, 01, 58, 29));
             Assert.AreEqual(true, o.IsCodeValid(68084774));
 
-            p.SetFieldOrProperty("TestTime", new DateTime(2005, 03, 18, 01, 58, 31));
+            p.SetFieldOrProperty("_testTime", new DateTime(2005, 03, 18, 01, 58, 31));
             Assert.AreEqual(true, o.IsCodeValid(67062674));
 
-            p.SetFieldOrProperty("TestTime", new DateTime(2009, 02, 13, 23, 31, 30));
+            p.SetFieldOrProperty("_testTime", new DateTime(2009, 02, 13, 23, 31, 30));
             Assert.AreEqual(true, o.IsCodeValid(91819424));
 
-            p.SetFieldOrProperty("TestTime", new DateTime(2033, 05, 18, 03, 33, 20));
+            p.SetFieldOrProperty("_testTime", new DateTime(2033, 05, 18, 03, 33, 20));
             Assert.AreEqual(true, o.IsCodeValid(90698825));
 
-            p.SetFieldOrProperty("TestTime", new DateTime(2603, 10, 11, 11, 33, 20));
+            p.SetFieldOrProperty("_testTime", new DateTime(2603, 10, 11, 11, 33, 20));
             Assert.AreEqual(true, o.IsCodeValid(77737706));
         }
 
@@ -467,27 +467,27 @@ namespace OneTimePasswordSample.Test {
             var o = new OneTimePassword(ASCIIEncoding.ASCII.GetBytes("1234567890123456789012345678901234567890123456789012345678901234")) { Algorithm = OneTimePasswordAlgorithm.Sha512, Digits = 8 };
             var p = new PrivateObject(o);
 
-            p.SetFieldOrProperty("TestTime", new DateTime(1970, 01, 01, 00, 00, 59));
+            p.SetFieldOrProperty("_testTime", new DateTime(1970, 01, 01, 00, 00, 59));
             Assert.AreEqual(0x0000000000000001, o.Counter);
             Assert.AreEqual(90693936, o.GetCode());
 
-            p.SetFieldOrProperty("TestTime", new DateTime(2005, 03, 18, 01, 58, 29));
+            p.SetFieldOrProperty("_testTime", new DateTime(2005, 03, 18, 01, 58, 29));
             Assert.AreEqual(0x00000000023523EC, o.Counter);
             Assert.AreEqual(25091201, o.GetCode());
 
-            p.SetFieldOrProperty("TestTime", new DateTime(2005, 03, 18, 01, 58, 31));
+            p.SetFieldOrProperty("_testTime", new DateTime(2005, 03, 18, 01, 58, 31));
             Assert.AreEqual(0x00000000023523ED, o.Counter);
             Assert.AreEqual(99943326, o.GetCode());
 
-            p.SetFieldOrProperty("TestTime", new DateTime(2009, 02, 13, 23, 31, 30));
+            p.SetFieldOrProperty("_testTime", new DateTime(2009, 02, 13, 23, 31, 30));
             Assert.AreEqual(0x000000000273EF07, o.Counter);
             Assert.AreEqual(93441116, o.GetCode());
 
-            p.SetFieldOrProperty("TestTime", new DateTime(2033, 05, 18, 03, 33, 20));
+            p.SetFieldOrProperty("_testTime", new DateTime(2033, 05, 18, 03, 33, 20));
             Assert.AreEqual(0x0000000003F940AA, o.Counter);
             Assert.AreEqual(38618901, o.GetCode());
 
-            p.SetFieldOrProperty("TestTime", new DateTime(2603, 10, 11, 11, 33, 20));
+            p.SetFieldOrProperty("_testTime", new DateTime(2603, 10, 11, 11, 33, 20));
             Assert.AreEqual(0x0000000027BC86AA, o.Counter);
             Assert.AreEqual(47863826, o.GetCode());
         }
@@ -497,22 +497,22 @@ namespace OneTimePasswordSample.Test {
             var o = new OneTimePassword(ASCIIEncoding.ASCII.GetBytes("1234567890123456789012345678901234567890123456789012345678901234")) { Algorithm = OneTimePasswordAlgorithm.Sha512, Digits = 8 };
             var p = new PrivateObject(o);
 
-            p.SetFieldOrProperty("TestTime", new DateTime(1970, 01, 01, 00, 00, 59));
+            p.SetFieldOrProperty("_testTime", new DateTime(1970, 01, 01, 00, 00, 59));
             Assert.AreEqual(true, o.IsCodeValid(90693936));
 
-            p.SetFieldOrProperty("TestTime", new DateTime(2005, 03, 18, 01, 58, 29));
+            p.SetFieldOrProperty("_testTime", new DateTime(2005, 03, 18, 01, 58, 29));
             Assert.AreEqual(true, o.IsCodeValid(25091201));
 
-            p.SetFieldOrProperty("TestTime", new DateTime(2005, 03, 18, 01, 58, 31));
+            p.SetFieldOrProperty("_testTime", new DateTime(2005, 03, 18, 01, 58, 31));
             Assert.AreEqual(true, o.IsCodeValid(99943326));
 
-            p.SetFieldOrProperty("TestTime", new DateTime(2009, 02, 13, 23, 31, 30));
+            p.SetFieldOrProperty("_testTime", new DateTime(2009, 02, 13, 23, 31, 30));
             Assert.AreEqual(true, o.IsCodeValid(93441116));
 
-            p.SetFieldOrProperty("TestTime", new DateTime(2033, 05, 18, 03, 33, 20));
+            p.SetFieldOrProperty("_testTime", new DateTime(2033, 05, 18, 03, 33, 20));
             Assert.AreEqual(true, o.IsCodeValid(38618901));
 
-            p.SetFieldOrProperty("TestTime", new DateTime(2603, 10, 11, 11, 33, 20));
+            p.SetFieldOrProperty("_testTime", new DateTime(2603, 10, 11, 11, 33, 20));
             Assert.AreEqual(true, o.IsCodeValid(47863826));
         }
 

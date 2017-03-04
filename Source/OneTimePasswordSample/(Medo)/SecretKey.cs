@@ -28,9 +28,9 @@ namespace Medo.Security.Cryptography
         {
             using (var rng = RandomNumberGenerator.Create())
             {
-                rng.GetBytes(this.SecretBuffer);
+                rng.GetBytes(_secretBuffer);
             }
-            this.SecretLength = length;
+            _secretLength = length;
             ProtectSecret();
         }
 
@@ -43,10 +43,10 @@ namespace Medo.Security.Cryptography
         public SecretKey(byte[] secret)
         {
             if (secret == null) { throw new ArgumentNullException("secret", "Secret cannot be null."); }
-            if (secret.Length > this.SecretBuffer.Length) { throw new ArgumentOutOfRangeException("secret", "Secret cannot be longer than 8192 bits (1024 bytes)."); }
+            if (secret.Length > _secretBuffer.Length) { throw new ArgumentOutOfRangeException("secret", "Secret cannot be longer than 8192 bits (1024 bytes)."); }
 
-            Buffer.BlockCopy(secret, 0, this.SecretBuffer, 0, secret.Length);
-            this.SecretLength = secret.Length;
+            Buffer.BlockCopy(secret, 0, _secretBuffer, 0, secret.Length);
+            _secretLength = secret.Length;
             ProtectSecret();
         }
 
@@ -63,8 +63,8 @@ namespace Medo.Security.Cryptography
             try
             {
                 int length;
-                FromBase32(secret, this.SecretBuffer, out length);
-                this.SecretLength = length;
+                FromBase32(secret, _secretBuffer, out length);
+                _secretLength = length;
             }
             catch (IndexOutOfRangeException)
             {
@@ -79,17 +79,17 @@ namespace Medo.Security.Cryptography
 
         #region Secret buffer
 
-        private readonly byte[] SecretBuffer = new byte[1024]; //ProtectedMemory requires length of the data to be a multiple of 16 bytes.
-        private readonly int SecretLength;
+        private readonly byte[] _secretBuffer = new byte[1024]; //ProtectedMemory requires length of the data to be a multiple of 16 bytes.
+        private readonly int _secretLength;
 
         private void ProtectSecret()
         {
-            ProtectedMemory.Protect(this.SecretBuffer, MemoryProtectionScope.SameProcess);
+            ProtectedMemory.Protect(_secretBuffer, MemoryProtectionScope.SameProcess);
         }
 
         private void UnprotectSecret()
         {
-            ProtectedMemory.Unprotect(this.SecretBuffer, MemoryProtectionScope.SameProcess);
+            ProtectedMemory.Unprotect(_secretBuffer, MemoryProtectionScope.SameProcess);
         }
 
 
@@ -99,16 +99,16 @@ namespace Medo.Security.Cryptography
         /// </summary>
         public byte[] GetSecret()
         {
-            var buffer = new byte[this.SecretLength];
+            var buffer = new byte[_secretLength];
 
-            this.UnprotectSecret();
+            UnprotectSecret();
             try
             {
-                Buffer.BlockCopy(this.SecretBuffer, 0, buffer, 0, buffer.Length);
+                Buffer.BlockCopy(_secretBuffer, 0, buffer, 0, buffer.Length);
             }
             finally
             {
-                this.ProtectSecret();
+                ProtectSecret();
             }
 
             return buffer;
@@ -121,14 +121,14 @@ namespace Medo.Security.Cryptography
         /// <param name="format">Format of Base32 string.</param>
         public string GetBase32Secret(SecretFormatFlags format = SecretFormatFlags.Spacing)
         {
-            this.UnprotectSecret();
+            UnprotectSecret();
             try
             {
-                return ToBase32(this.SecretBuffer, this.SecretLength, format);
+                return ToBase32(_secretBuffer, _secretLength, format);
             }
             finally
             {
-                this.ProtectSecret();
+                ProtectSecret();
             }
         }
 
