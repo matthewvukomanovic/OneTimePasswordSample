@@ -158,6 +158,16 @@ namespace OneTimePasswordSample {
             }
 
             txtCode.Text = GetCode();
+            TimeSpan timeleft = TimeSpan.Zero;
+            if (valid && temp.TimeStep != 0)
+            {
+                timeleft = temp.TimeLeft;
+                textBox4.Text = timeleft.ToString("%s");
+            }
+            else
+            {
+                textBox4.Text = "";
+            }
 
             var valueToSet = string.Empty;
             if (valid)
@@ -187,7 +197,7 @@ namespace OneTimePasswordSample {
 
                     if (i == current)
                     {
-                        sb.AppendLine("\r\nCurrent:");
+                        sb.AppendLine("\r\nCurrent:" + (temp.TimeStep != 0 ? " " + timeleft.ToString("%s") : ""));
                     }
 
                     sb.AppendLine(temp2.GetFormattedCode());
@@ -348,6 +358,12 @@ namespace OneTimePasswordSample {
                 var verifyCode = textBox2.Text;
                 var valid = _otp.IsCodeValid(verifyCode);
                 textBox3.Text = valid ? "Is Valid" : "Invalid";
+
+                if (valid && _otp.TimeStep == 0)
+                {
+                    _otp.Counter --;
+                    SetCodeFromCurrent();
+                }
             }
         }
     }

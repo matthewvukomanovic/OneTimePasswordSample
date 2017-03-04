@@ -134,14 +134,12 @@ namespace Medo.Security.Cryptography {
         /// <exception cref="System.ArgumentOutOfRangeException">Counter value must be a positive number.</exception>
         /// <exception cref="System.NotSupportedException">Counter value can only be set in HOTP mode (time step is zero).</exception>
         public long Counter {
-            get {
+            get
+            {
                 if (TimeStep == 0) {
                     return _counter;
-                } else {
-                    var currTime = (_testTime > DateTime.MinValue) ? _testTime : DateTime.UtcNow;
-                    var seconds = (currTime.Ticks - _epoch.Ticks) / 10000000;
-                    return (seconds / TimeStep);
                 }
+                return GetCounter();
             }
             set {
                 if (TimeStep == 0) {
@@ -151,6 +149,47 @@ namespace Medo.Security.Cryptography {
                     throw new NotSupportedException("Counter value can only be set in HOTP mode (time step is zero).");
                 }
             }
+        }
+
+        public TimeSpan TimeLeft
+        {
+            get {
+                return GetTimeLeft();
+            }
+        }
+
+        private TimeSpan GetTimeLeft()
+        {
+            TimeSpan timeLeft;
+            GetTimeLeftAndCounter(out timeLeft);
+            return timeLeft;
+        }
+
+        private long GetCounter()
+        {
+            TimeSpan timeLeft;
+            return GetTimeLeftAndCounter(out timeLeft);
+        }
+
+        private long GetTimeLeftAndCounter(out TimeSpan timeLeft)
+        {
+            var timeStep = TimeStep;
+            if (timeStep == 0)
+            {
+                timeLeft = TimeSpan.Zero;
+                return 0;
+            }
+
+            timeStep = timeStep * 10000000;
+
+            var currTime = (_testTime > DateTime.MinValue) ? _testTime : DateTime.UtcNow;
+            var passedTicks = currTime.Ticks - _epoch.Ticks;
+            var counter = passedTicks / timeStep;
+
+            var ticksLeft = timeStep - (passedTicks % timeStep);
+
+            timeLeft = new TimeSpan(ticksLeft);
+            return counter;
         }
 
         private OneTimePasswordAlgorithm _algorithm = OneTimePasswordAlgorithm.Sha1;
