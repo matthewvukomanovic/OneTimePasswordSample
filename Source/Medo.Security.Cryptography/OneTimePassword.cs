@@ -2,20 +2,17 @@
 
 //2015-02-12: Initial version.
 
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Security.Cryptography;
 
 namespace Medo.Security.Cryptography {
-
     /// <summary>
     /// Implementation of HOTP (RFC 4226) and TOTP (RFC 6238) one-time password algorithms.
     /// </summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "OneTime", Justification = "One time is more commonly written as two words.")]
     public class OneTimePassword {
-
         private readonly SecretKey _secretKey;
 
         /// <summary>
@@ -67,10 +64,8 @@ namespace Medo.Security.Cryptography {
             }
         }
 
-
         private int _tolerancePrev = 1;
         private int _toleranceNext = 0;
-
 
         /// <summary>
         /// Gets/Sets number of previous codes which should be accepted.
@@ -101,7 +96,6 @@ namespace Medo.Security.Cryptography {
                 _toleranceNext = value;
             }
         }
-
 
         private int _timeStep = 30;
         /// <summary>
@@ -234,7 +228,7 @@ namespace Medo.Security.Cryptography {
 
         /// <summary>
         /// Returns code.
-        /// In HOTP mode (time step is zero), counter will be automatically increased. 
+        /// In HOTP mode (time step is zero), counter will be automatically increased.
         /// </summary>
         public int GetCode() {
             return GetCode(Digits);
@@ -286,10 +280,9 @@ namespace Medo.Security.Cryptography {
         private int _cachedCode;
         private OneTimePasswordAlgorithm? _cachedAlgorithm = null;
 
-
         /// <summary>
         /// Returns code.
-        /// In HOTP mode (time step is zero), counter will be automatically increased. 
+        /// In HOTP mode (time step is zero), counter will be automatically increased.
         /// Number of digits should be kept between 6 and 8 for best results.
         /// </summary>
         /// <param name="digits">Number of digits to return.</param>
@@ -404,7 +397,6 @@ namespace Medo.Security.Cryptography {
 
             for (int i = 1; i <= actualPrev; i++)
             {
-
                 testCounter = counter - i;
                 actualCode = GetCode(testCounter, actualDigits);
                 valid = actualCode == code;
@@ -463,5 +455,4 @@ namespace Medo.Security.Cryptography {
         /// </summary>
         Sha512 = 2,
     }
-
 }
