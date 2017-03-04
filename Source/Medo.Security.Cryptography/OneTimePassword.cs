@@ -67,6 +67,42 @@ namespace Medo.Security.Cryptography {
             }
         }
 
+
+        private int _tolerancePrev = 1;
+        private int _toleranceNext = 0;
+
+
+        /// <summary>
+        /// Gets/Sets number of previous codes which should be accepted.
+        /// 0 or more.
+        /// </summary>
+        /// <exception cref="System.ArgumentOutOfRangeException">Number of previous codes to accept should be zero or more</exception>
+        public int TolerancePrev
+        {
+            get { return _tolerancePrev; }
+            set
+            {
+                if ((value < 0)) { throw new ArgumentOutOfRangeException("value", "Number of previous codes to accept should be zero or more"); }
+                _tolerancePrev = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets/Sets number of future codes which should be accepted.
+        /// 0 or more.
+        /// </summary>
+        /// <exception cref="System.ArgumentOutOfRangeException">Number of future codes to accept should be zero or more</exception>
+        public int ToleranceNext
+        {
+            get { return _toleranceNext; }
+            set
+            {
+                if ((value < 0)) { throw new ArgumentOutOfRangeException("value", "Number of future codes to accept should be zero or more"); }
+                _toleranceNext = value;
+            }
+        }
+
+
         private int _timeStep = 30;
         /// <summary>
         /// Gets/sets time step in seconds for TOTP algorithm.
@@ -269,19 +305,24 @@ namespace Medo.Security.Cryptography {
         /// Returns true if code has been validated.
         /// </summary>
         /// <param name="code">Code to validate.</param>
+        /// <param name="digits">The number of digits to verify against. Null or Zero or less uses the currently defined value</param>
+        /// <param name="tolerancePrev">The number of codes previous which we should accept</param>
+        /// <param name="toleranceNext">The number of codes ahead which we should accept</param>
         /// <exception cref="System.ArgumentOutOfRangeException">Code must contain only numbers and whitespace.</exception>
         /// <exception cref="System.ArgumentNullException">Code cannot be null.</exception>
-        public bool IsCodeValid(string code) {
+        public bool IsCodeValid(string code, int? digits = null, int? tolerancePrev = null, int? toleranceNext = null)
+        {
             if (code == null) { throw new ArgumentNullException("code", "Code cannot be null."); }
             var number = 0;
-            foreach (var ch in code) {
+            foreach (var ch in code)
+            {
                 if (char.IsWhiteSpace(ch)) { continue; }
                 if (!char.IsDigit(ch)) { throw new ArgumentOutOfRangeException("code", "Code must contain only numbers and whitespace."); }
                 if (number >= 100000000) { return false; } //number cannot be more than 9 digits
                 number *= 10;
                 number += (ch - 0x30);
             }
-            return IsCodeValid(number);
+            return IsCodeValid(number, digits, tolerancePrev, toleranceNext);
         }
 
         /// <summary>
@@ -289,17 +330,64 @@ namespace Medo.Security.Cryptography {
         /// In HOTP mode (time step is zero) counter will increased if code is valid.
         /// </summary>
         /// <param name="code">Code to validate.</param>
-        public bool IsCodeValid(int code) {
-            var currCode = GetCode(Counter, Digits);
-            var prevCode = GetCode(Counter - 1, Digits);
+        /// <param name="digits">The number of digits to verify against. Null or Zero or less uses the currently defined value</param>
+        /// <param name="tolerancePrev">The number of codes previous which we should accept</param>
+        /// <param name="toleranceNext">The number of codes ahead which we should accept</param>
+        public bool IsCodeValid(int code, int? digits = null, int? tolerancePrev = null, int? toleranceNext = null)
+        {
+            var counter = Counter;
+            var actualDigits = digits == null || digits <= 0 ? Digits : digits.Value;
+            var actualPrev = tolerancePrev == null || tolerancePrev <= 0 ? TolerancePrev: tolerancePrev.Value;
+            var actualNext = toleranceNext == null || toleranceNext <= 0 ? ToleranceNext : toleranceNext.Value;
 
-            var isCurrValid = (code == currCode);
-            var isPrevValid = (code == prevCode) && (Counter > 0); //don't check previous code if counter is zero; but calculate it anyhow (to keep timing)
-            var isValid = isCurrValid || isPrevValid;
-            if ((TimeStep == 0) && isValid) {
-                Counter++;
+            bool valid;
+            bool anyValid;
+
+            long testCounter;
+
+            var actualCode = GetCode(counter, actualDigits);
+            valid = actualCode == code;
+            anyValid = valid;
+            var validCounter = counter;
+
+            for (int i = 1; i <= actualPrev; i++)
+            {
+
+                testCounter = counter - i;
+                actualCode = GetCode(testCounter, actualDigits);
+                valid = actualCode == code;
+                if (valid)
+                {
+                    validCounter = testCounter;
+                }
+                anyValid = valid || anyValid; // Still compare the previous codes to keep timing of the codes.
+                // Can this be used for hacking if we don't do this? Since if it is correct we are letting them in anyway.
             }
-            return isValid;
+
+            for (int i = 1; i <= actualNext; i++)
+            {
+                testCounter = counter + i;
+                actualCode = GetCode(testCounter, actualDigits);
+                valid = actualCode == code;
+                if (valid)
+                {
+                    validCounter = testCounter;
+                }
+                anyValid = valid || anyValid; // Still compare the next codes to keep timing of the codes.
+                // Can this be used for hacking if we don't do this? Since if it is correct we are letting them in anyway.
+            }
+            if ((TimeStep == 0) && anyValid)
+            {
+                if (validCounter > counter)
+                {
+                    Counter = validCounter + 1;
+                }
+                else
+                {
+                    Counter = counter + 1;
+                }
+            }
+            return anyValid;
         }
 
         #endregion
