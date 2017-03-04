@@ -176,6 +176,19 @@ namespace Medo.Security.Cryptography {
             get { return _secretKey; }
         }
 
+        public void CopySettingsFrom(OneTimePassword other)
+        {
+            TimeStep = other.TimeStep;
+            Algorithm = other.Algorithm;
+            Digits = other.Digits;
+            if (_timeStep == 0)
+            {
+                Counter = other.Counter;
+            }
+            TolerancePrev = other.TolerancePrev;
+            ToleranceNext = other.ToleranceNext;
+        }
+
         #endregion
 
         #region Code
