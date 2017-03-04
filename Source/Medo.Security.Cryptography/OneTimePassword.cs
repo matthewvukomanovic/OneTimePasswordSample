@@ -97,7 +97,10 @@ namespace Medo.Security.Cryptography {
             }
         }
 
-        private int _timeStep = 30;
+        private const int TimestepDefault = 30;
+
+        private int _timeStep = TimestepDefault;
+        private long _timeStepTicks = TimestepDefault * 10000000;
         /// <summary>
         /// Gets/sets time step in seconds for TOTP algorithm.
         /// Value must be between 15 and 300 seconds.
@@ -109,10 +112,13 @@ namespace Medo.Security.Cryptography {
             set {
                 if (value == 0) {
                     _timeStep = 0;
+                    _timeStepTicks = 0l;
                     Counter = 0;
                 } else {
                     if ((value < 0) || (value > 86400)) { throw new ArgumentOutOfRangeException("value", "Time step must be between 0 and 86400 seconds."); }
                     _timeStep = value;
+                    _timeStepTicks = ((long) _timeStep) * 10000000;
+
                 }
             }
         }
@@ -133,7 +139,7 @@ namespace Medo.Security.Cryptography {
                 if (TimeStep == 0) {
                     return _counter;
                 }
-                return GetCounter();
+                return GetTimedCounter();
             }
             set {
                 if (TimeStep == 0) {
@@ -152,38 +158,51 @@ namespace Medo.Security.Cryptography {
             }
         }
 
+        public DateTime NextChangeTime
+        {
+            get
+            {
+                return GetNextChangeTime();
+            }
+        }
+
         private TimeSpan GetTimeLeft()
         {
-            TimeSpan timeLeft;
-            GetTimeLeftAndCounter(out timeLeft);
-            return timeLeft;
-        }
-
-        private long GetCounter()
-        {
-            TimeSpan timeLeft;
-            return GetTimeLeftAndCounter(out timeLeft);
-        }
-
-        private long GetTimeLeftAndCounter(out TimeSpan timeLeft)
-        {
-            var timeStep = TimeStep;
-            if (timeStep == 0)
+            var timeStepTicks = _timeStepTicks;
+            if (timeStepTicks == 0)
             {
-                timeLeft = TimeSpan.Zero;
-                return 0;
+                return TimeSpan.Zero;
             }
 
-            timeStep = timeStep * 10000000;
 
             var currTime = (_testTime > DateTime.MinValue) ? _testTime : DateTime.UtcNow;
             var passedTicks = currTime.Ticks - _epoch.Ticks;
-            var counter = passedTicks / timeStep;
+            var ticksLeft = timeStepTicks - (passedTicks % timeStepTicks);
 
-            var ticksLeft = timeStep - (passedTicks % timeStep);
+            return new TimeSpan(ticksLeft);
+        }
 
-            timeLeft = new TimeSpan(ticksLeft);
-            return counter;
+        private long GetTimedCounter()
+        {
+            var timeStep = TimeStep;
+            var currTime = (_testTime > DateTime.MinValue) ? _testTime : DateTime.UtcNow;
+            var passedTicks = currTime.Ticks - _epoch.Ticks;
+            return (passedTicks / 10000000) / timeStep;
+        }
+
+        private DateTime GetNextChangeTime()
+        {
+            var timeStepTicks = _timeStepTicks;
+            if (timeStepTicks == 0)
+            {
+                return DateTime.MinValue;
+            }
+
+            var currTime = (_testTime > DateTime.MinValue) ? _testTime : DateTime.UtcNow;
+            var passedTicks = currTime.Ticks - _epoch.Ticks;
+            var ticksLeft = timeStepTicks - (passedTicks % timeStepTicks);
+            var nextChangeTicks = passedTicks + ticksLeft + _epoch.Ticks;
+            return new DateTime(nextChangeTicks);
         }
 
         private OneTimePasswordAlgorithm _algorithm = OneTimePasswordAlgorithm.Sha1;

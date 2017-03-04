@@ -163,6 +163,7 @@ namespace OneTimePasswordSample {
             {
                 timeleft = temp.TimeLeft;
                 textBox4.Text = timeleft.ToString("%s");
+                textBox4.Text = textBox4.Text + " " + temp.NextChangeTime.ToString("HH:mm:ss");
             }
             else
             {
