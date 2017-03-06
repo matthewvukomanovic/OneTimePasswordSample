@@ -112,7 +112,7 @@ namespace Medo.Security.Cryptography {
             set {
                 if (value == 0) {
                     _timeStep = 0;
-                    _timeStepTicks = 0l;
+                    _timeStepTicks = 0L;
                     Counter = 0;
                 } else {
                     if ((value < 0) || (value > 86400)) { throw new ArgumentOutOfRangeException("value", "Time step must be between 0 and 86400 seconds."); }
